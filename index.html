@@ -1,0 +1,472 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AgentForge Lite - Create AI Agents Without Code</title>
+    <link rel="stylesheet" href="style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+    <!-- AI Setup Banner -->
+    <div id="ai-setup-banner" class="ai-banner">
+        <div class="ai-banner-content">
+            <i class="fas fa-robot"></i>
+            <span>Hint: Enter a free OpenRouter key or HuggingFace token in ⚙️ Settings to start chatting with real AI models. Or run Ollama locally and choose Local.</span>
+            <button class="ai-banner-close" id="dismiss-banner">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Navigation Header -->
+    <nav class="nav-header">
+        <div class="nav-container">
+            <div class="nav-brand" id="nav-home">
+                <i class="fas fa-robot"></i>
+                <span>AgentForge Lite</span>
+            </div>
+            <div class="nav-links">
+                <a href="#" id="nav-builder" class="nav-link">Create Agent</a>
+                <a href="#" id="nav-marketplace" class="nav-link">Marketplace</a>
+                <a href="#" id="nav-help" class="nav-link">Help</a>
+                <button class="btn btn--outline btn--sm" id="settings-btn">
+                    <i class="fas fa-cog"></i>
+                    Settings
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- App Container -->
+    <div id="app" class="app-container">
+        
+        <!-- Home Screen -->
+        <div id="home-screen" class="screen active">
+            <div class="hero-section">
+                <div class="hero-content">
+                    <h1 class="hero-title">Create Powerful AI Agents in Minutes</h1>
+                    <p class="hero-subtitle">Build custom AI assistants without coding. Choose from templates, customize, and deploy instantly.</p>
+                    <div class="hero-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">6</span>
+                            <span class="stat-label">Templates</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">Live AI</span>
+                            <span class="stat-label">Enabled</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">0</span>
+                            <span class="stat-label">Backend Required</span>
+                        </div>
+                    </div>
+                    <div class="hero-actions">
+                        <button class="btn btn--primary btn--lg" id="start-creating">
+                            <i class="fas fa-magic"></i>
+                            Start Creating
+                        </button>
+                        <button class="btn btn--outline btn--lg" id="browse-agents">
+                            <i class="fas fa-th-large"></i>
+                            Browse Marketplace
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="features-section">
+                <div class="container">
+                    <h2 class="section-title">Why Choose AgentForge Lite?</h2>
+                    <div class="features-grid">
+                        <div class="feature-card">
+                            <div class="feature-icon">🚀</div>
+                            <h3>No Backend Required</h3>
+                            <p>Everything runs in your browser. No servers, databases, or complex setup needed.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">⚡</div>
+                            <h3>Instant Deploy</h3>
+                            <p>Export your agent as HTML or JSON and share it immediately with anyone.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🎨</div>
+                            <h3>Easy Customization</h3>
+                            <p>Customize personality, prompts, and behavior with our intuitive interface.</p>
+                        </div>
+                        <div class="feature-card">
+                            <div class="feature-icon">🔧</div>
+                            <h3>Real AI Integration</h3>
+                            <p>Connect to OpenRouter, HuggingFace, or local Ollama for live AI responses.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Template Selection Screen -->
+        <div id="templates-screen" class="screen">
+            <div class="container">
+                <div class="screen-header">
+                    <button class="btn btn--outline btn--sm back-btn" id="back-to-home">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                    <div class="header-content">
+                        <h1>Choose Your Agent Template</h1>
+                        <p>Start with a pre-built template and customize it to your needs</p>
+                    </div>
+                </div>
+
+                <div class="templates-grid" id="templates-grid">
+                    <!-- Templates will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Agent Builder Screen -->
+        <div id="builder-screen" class="screen">
+            <div class="builder-header">
+                <button class="btn btn--outline btn--sm back-btn" id="back-to-templates">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Templates
+                </button>
+                <div class="builder-title">
+                    <h2 id="agent-title">Customize Your Agent</h2>
+                </div>
+                <div class="builder-actions">
+                    <button class="btn btn--outline btn--sm" id="test-agent">
+                        <i class="fas fa-comments"></i>
+                        Test Agent
+                    </button>
+                    <button class="btn btn--primary btn--sm" id="export-agent">
+                        <i class="fas fa-download"></i>
+                        Export Agent
+                    </button>
+                </div>
+            </div>
+
+            <div class="builder-content">
+                <div class="builder-form">
+                    <div class="form-section">
+                        <h3>Basic Information</h3>
+                        <div class="form-group">
+                            <label class="form-label">Agent Name</label>
+                            <input type="text" id="agent-name" class="form-control" placeholder="Enter agent name">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Description</label>
+                            <textarea id="agent-description" class="form-control" placeholder="Describe what your agent does" rows="3"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Avatar</label>
+                            <div class="avatar-selector">
+                                <div class="avatar-options" id="avatar-options">
+                                    <div class="avatar-option active" data-avatar="🤖">🤖</div>
+                                    <div class="avatar-option" data-avatar="💻">💻</div>
+                                    <div class="avatar-option" data-avatar="✍️">✍️</div>
+                                    <div class="avatar-option" data-avatar="📊">📊</div>
+                                    <div class="avatar-option" data-avatar="🎓">🎓</div>
+                                    <div class="avatar-option" data-avatar="💼">💼</div>
+                                    <div class="avatar-option" data-avatar="👨‍🍳">👨‍🍳</div>
+                                    <div class="avatar-option" data-avatar="💪">💪</div>
+                                    <div class="avatar-option" data-avatar="✈️">✈️</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3>Behavior & Personality</h3>
+                        <div class="form-group">
+                            <label class="form-label">System Prompt</label>
+                            <textarea id="system-prompt" class="form-control" placeholder="Define how your agent should behave" rows="6"></textarea>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Personality</label>
+                            <select id="personality" class="form-control">
+                                <option value="professional">Professional</option>
+                                <option value="friendly">Friendly</option>
+                                <option value="technical">Technical</option>
+                                <option value="creative">Creative</option>
+                                <option value="analytical">Analytical</option>
+                                <option value="patient">Patient</option>
+                                <option value="strategic">Strategic</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Response Style</label>
+                            <select id="response-style" class="form-control">
+                                <option value="helpful">Helpful</option>
+                                <option value="precise">Precise</option>
+                                <option value="engaging">Engaging</option>
+                                <option value="factual">Factual</option>
+                                <option value="educational">Educational</option>
+                                <option value="advisory">Advisory</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="builder-preview">
+                    <div class="preview-header">
+                        <h3>Live Preview</h3>
+                    </div>
+                    <div class="agent-preview" id="agent-preview">
+                        <div class="preview-avatar" id="preview-avatar">🤖</div>
+                        <div class="preview-info">
+                            <h4 id="preview-name">Agent Name</h4>
+                            <p id="preview-description">Agent description will appear here</p>
+                            <div class="preview-tags">
+                                <span class="tag" id="preview-personality">professional</span>
+                                <span class="tag" id="preview-style">helpful</span>
+                            </div>
+                        </div>
+                        <div class="preview-sample">
+                            <div class="sample-message">
+                                <div class="message-bubble" id="preview-sample">
+                                    Sample response will appear here based on your system prompt
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Chat Test Screen -->
+        <div id="chat-screen" class="screen">
+            <div class="chat-header">
+                <button class="btn btn--outline btn--sm back-btn" id="back-to-builder">
+                    <i class="fas fa-arrow-left"></i>
+                    Back to Builder
+                </button>
+                <div class="chat-title">
+                    <h2 id="chat-agent-name">Test Your Agent</h2>
+                    <div class="chat-status">
+                        <span class="status status--success">
+                            <i class="fas fa-circle"></i>
+                            Connected
+                        </span>
+                        <div class="ai-provider-badges" id="provider-badges">
+                            <!-- Provider badges will be added by JavaScript -->
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-actions">
+                    <button class="btn btn--outline btn--sm" id="clear-chat">
+                        <i class="fas fa-trash"></i>
+                        Clear
+                    </button>
+                    <button class="btn btn--primary btn--sm" id="finish-testing">
+                        <i class="fas fa-check"></i>
+                        Finish Testing
+                    </button>
+                </div>
+            </div>
+
+            <div class="chat-container">
+                <div class="chat-messages" id="chat-messages">
+                    <div class="welcome-message">
+                        <div class="message-avatar" id="chat-avatar">🤖</div>
+                        <div class="message-content">
+                            <p>Hello! I'm ready to chat. Test my responses and see how I behave.</p>
+                        </div>
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <div class="chat-input">
+                        <input type="text" id="message-input" placeholder="Type your message..." />
+                        <button id="send-message" class="btn btn--primary">
+                            <i class="fas fa-paper-plane"></i>
+                        </button>
+                    </div>
+                    <div class="typing-indicator hidden" id="typing-indicator">
+                        <span>AI is thinking...</span>
+                        <div class="typing-dots">
+                            <span></span>
+                            <span></span>
+                            <span></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Marketplace Screen -->
+        <div id="marketplace-screen" class="screen">
+            <div class="container">
+                <div class="screen-header">
+                    <button class="btn btn--outline btn--sm back-btn" id="marketplace-back">
+                        <i class="fas fa-arrow-left"></i>
+                        Back
+                    </button>
+                    <div class="header-content">
+                        <h1>Agent Marketplace</h1>
+                        <p>Discover and import agents created by the community</p>
+                    </div>
+                </div>
+
+                <div class="marketplace-filters">
+                    <div class="filter-group">
+                        <label>Category:</label>
+                        <select id="category-filter" class="form-control">
+                            <option value="all">All Categories</option>
+                            <option value="Business">Business</option>
+                            <option value="Development">Development</option>
+                            <option value="Creative">Creative</option>
+                            <option value="Analytics">Analytics</option>
+                            <option value="Education">Education</option>
+                            <option value="Lifestyle">Lifestyle</option>
+                            <option value="Health">Health</option>
+                            <option value="Travel">Travel</option>
+                        </select>
+                    </div>
+                    <div class="search-group">
+                        <input type="text" id="search-agents" class="form-control" placeholder="Search agents...">
+                        <i class="fas fa-search"></i>
+                    </div>
+                </div>
+
+                <div class="marketplace-grid" id="marketplace-grid">
+                    <!-- Marketplace agents will be populated by JavaScript -->
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Settings Modal -->
+    <div class="modal hidden" id="settings-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>AI Provider Settings</h3>
+                <button class="modal-close" data-modal="settings-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="settings-form">
+                    <div class="form-group">
+                        <label class="form-label">AI Provider</label>
+                        <select id="ai-provider-select" class="form-control">
+                            <option value="openrouter">OpenRouter (Free Tier with API Key)</option>
+                            <option value="huggingface">HuggingFace (Free/Rate Limited)</option>
+                            <option value="local">Local (Ollama)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Model ID</label>
+                        <input type="text" id="ai-model-input" class="form-control" placeholder="Model identifier">
+                        <small class="form-help">Default models will be set automatically when you change provider</small>
+                    </div>
+                    
+                    <div class="form-group" id="api-key-group">
+                        <label class="form-label">API Key</label>
+                        <input type="password" id="ai-api-key" class="form-control" placeholder="Enter your API key">
+                        <small class="form-help">Stored locally in your browser only</small>
+                    </div>
+                    
+                    <div class="form-group hidden" id="local-endpoint-group">
+                        <label class="form-label">Local Endpoint URL</label>
+                        <input type="text" id="local-endpoint-input" class="form-control" placeholder="http://localhost:11434/api/chat">
+                        <small class="form-help">URL to your local Ollama server</small>
+                    </div>
+                    
+                    <div class="provider-info" id="provider-info">
+                        <h4>OpenRouter</h4>
+                        <p>Get a free API key at <a href="https://openrouter.ai" target="_blank">openrouter.ai</a></p>
+                        <p>Free tier includes access to various models including DeepSeek R1.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button class="btn btn--outline" data-modal="settings-modal">Cancel</button>
+                <button class="btn btn--primary" id="save-settings">Save Settings</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Export Modal -->
+    <div class="modal hidden" id="export-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Export Your Agent</h3>
+                <button class="modal-close" data-modal="export-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="export-options">
+                    <div class="export-option">
+                        <h4>JSON Configuration</h4>
+                        <p>Download agent config for sharing or importing later</p>
+                        <button class="btn btn--primary btn--full-width" id="export-json">
+                            <i class="fas fa-file-code"></i>
+                            Download JSON
+                        </button>
+                    </div>
+                    <div class="export-option">
+                        <h4>Standalone HTML</h4>
+                        <p>Self-contained chat interface that works anywhere</p>
+                        <button class="btn btn--primary btn--full-width" id="export-html">
+                            <i class="fas fa-file-code"></i>
+                            Download HTML
+                        </button>
+                    </div>
+                    <div class="export-option">
+                        <h4>Share Link</h4>
+                        <p>Copy shareable data URL</p>
+                        <div class="share-link-container">
+                            <input type="text" id="share-link" class="form-control" readonly placeholder="Generating link...">
+                            <button class="btn btn--outline" id="copy-link">
+                                <i class="fas fa-copy"></i>
+                                Copy
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal hidden" id="import-modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Import Agent</h3>
+                <button class="modal-close" data-modal="import-modal">
+                    <i class="fas fa-times"></i>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="import-options">
+                    <div class="import-option">
+                        <h4>Upload JSON File</h4>
+                        <input type="file" id="import-file" accept=".json" class="form-control">
+                        <button class="btn btn--primary" id="import-from-file" disabled>
+                            <i class="fas fa-upload"></i>
+                            Import Agent
+                        </button>
+                    </div>
+                    <div class="import-option">
+                        <h4>Paste JSON Configuration</h4>
+                        <textarea id="import-json" class="form-control" rows="8" placeholder="Paste your agent JSON configuration here..."></textarea>
+                        <button class="btn btn--primary" id="import-from-text">
+                            <i class="fas fa-paste"></i>
+                            Import from Text
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container">
+        <!-- Toasts will be added here by JavaScript -->
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
